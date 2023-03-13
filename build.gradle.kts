@@ -33,6 +33,7 @@ dependencies {
     implementation("io.projectreactor.netty:reactor-netty-http:$reactorNetty")
     implementation("io.projectreactor.netty:reactor-netty-core:$reactorNetty")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
     testImplementation("org.mock-server:mockserver-netty:$mockserver")
     testImplementation("org.mock-server:mockserver-client-java:$mockserver")
     testImplementation("io.projectreactor:reactor-test:$reactorCore")
