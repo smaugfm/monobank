@@ -1,4 +1,4 @@
-package io.github.smaugfm.monobank
+package io.github.smaugfm.monobank.core
 
 import io.github.smaugfm.monobank.exception.MonoApiResponseError
 import io.netty.buffer.ByteBuf
@@ -16,16 +16,15 @@ import java.io.ByteArrayOutputStream
 import java.net.URI
 
 @ExperimentalSerializationApi
-internal class RequestExecutor(
+class RequestExecutor(
     private val port: Int,
     private val json: Json,
     private val httpClient: HttpClient
 ) {
-
     fun <TResponse : Any> executeGet(
         uri: URI,
         responseSerializer: KSerializer<TResponse>? = null,
-        token: String? = null,
+        token: String? = null
     ): Mono<TResponse> =
         httpClient
             .port(port)
@@ -41,7 +40,7 @@ internal class RequestExecutor(
         body: TBody,
         bodySerializer: KSerializer<TBody>,
         responseSerializer: KSerializer<TResponse>? = null,
-        token: String? = null,
+        token: String
     ): Mono<TResponse> =
         httpClient
             .port(port)
@@ -58,8 +57,8 @@ internal class RequestExecutor(
         byteBufMono: ByteBufMono,
         responseSerializer: KSerializer<TResponse>?
     ): Mono<TResponse> =
-        if (isOk(resp)) {
-            getBody(responseSerializer, byteBufMono)
+        if (resp.isOk()) {
+            deserializeResponseBody(responseSerializer, byteBufMono)
         } else {
             byteBufMono.asByteArray()
                 .flatMap<TResponse> {
@@ -69,26 +68,17 @@ internal class RequestExecutor(
                 )
         }
 
-    private fun <TResponse : Any> getBody(
+    private fun <TResponse : Any> deserializeResponseBody(
         responseSerializer: KSerializer<TResponse>?,
         byteBufMono: ByteBufMono
-    ): Mono<TResponse> = if (responseSerializer != null) byteBufMono
-        .asString()
-        .map { body: String ->
-            json.decodeFromString(responseSerializer, body)
-        }
-    else Mono.empty()
-
-    private fun <TResponse : Any> deserializeBody(
-        responseSerializer: KSerializer<TResponse>?,
-        byteBufMono: ByteBufMono
-    ): Mono<TResponse> {
-        return if (responseSerializer != null) byteBufMono
+    ): Mono<TResponse> = if (responseSerializer != null) {
+        byteBufMono
             .asString()
             .map { body: String ->
                 json.decodeFromString(responseSerializer, body)
             }
-        else Mono.empty()
+    } else {
+        Mono.empty()
     }
 
     private fun <T> serializeRequestBody(serializer: KSerializer<T>, body: T): ByteBuf {
@@ -99,10 +89,10 @@ internal class RequestExecutor(
         return Unpooled.wrappedBuffer(byteArray)
     }
 
-    private fun isOk(response: HttpClientResponse) =
-        response.status().codeAsText().startsWith("2")
-
     companion object {
         const val X_TOKEN = "X-Token"
+
+        private fun HttpClientResponse.isOk() =
+            this.status().codeAsText().startsWith("2")
     }
 }

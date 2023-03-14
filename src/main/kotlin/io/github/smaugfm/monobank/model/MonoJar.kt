@@ -8,14 +8,12 @@ import kotlinx.serialization.UseSerializers
 import java.util.Currency
 
 @Serializable
-data class MonoAccount(
+data class MonoJar(
     val id: String,
     val sendId: String,
-    val balance: Long,
-    val creditLimit: Long,
-    val type: String,
+    val title: String,
+    val description: String,
     val currencyCode: Currency,
-    val cashbackType: MonoCashbackType,
-    val iban: String,
-    val maskedPan: List<String>
+    val balance: Long,
+    val goal: Long
 )

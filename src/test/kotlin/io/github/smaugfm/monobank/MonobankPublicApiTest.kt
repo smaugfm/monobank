@@ -4,13 +4,15 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import io.github.smaugfm.monobank.model.MonoCurrencyInfo
 import kotlinx.datetime.Instant
+import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.jupiter.api.Test
 import org.mockserver.model.HttpRequest.request
 import org.mockserver.model.HttpResponse.response
 import org.mockserver.model.MediaType
 import java.util.Currency
 
-class MonobankTest : TestMockServerBase(false) {
+@ExperimentalSerializationApi
+class MonobankPublicApiTest : TestMockServerBase(false) {
 
     @Test
     fun getExchangeRatesTest() {
@@ -24,7 +26,7 @@ class MonobankTest : TestMockServerBase(false) {
                 .withBody(getResourceAsString("getExchangeRates.json"))
         )
 
-        assertThat(api.getExchangeRates().block())
+        assertThat(apiPublic.getExchangeRates().block())
             .isEqualTo(
                 listOf(
                     MonoCurrencyInfo(

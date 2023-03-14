@@ -1,6 +1,6 @@
 package io.github.smaugfm.monobank
 
-import io.github.smaugfm.monobank.RequestExecutor.Companion.X_TOKEN
+import io.github.smaugfm.monobank.core.RequestExecutor.Companion.X_TOKEN
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -14,7 +14,8 @@ import org.slf4j.event.Level
 
 @OptIn(ExperimentalSerializationApi::class)
 open class TestMockServerBase(private val expectXToken: Boolean = true) {
-    protected val api: Monobank = MonobankTest()
+    protected val apiPersonal = MonobankPersonalApi(TOKEN, BASE_URL, PORT)
+    protected val apiPublic = MonobankPublicApi(BASE_URL, PORT)
 
     @BeforeEach
     fun createClient() {
@@ -43,8 +44,6 @@ open class TestMockServerBase(private val expectXToken: Boolean = true) {
                 )
         }
     }
-
-    class MonobankTest : Monobank(TOKEN, BASE_URL, PORT)
 
     companion object {
         const val TOKEN = "validToken"
