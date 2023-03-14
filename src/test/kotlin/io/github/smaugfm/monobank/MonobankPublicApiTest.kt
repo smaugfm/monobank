@@ -5,11 +5,14 @@ import assertk.assertions.isEqualTo
 import io.github.smaugfm.monobank.model.MonoCurrencyInfo
 import kotlinx.datetime.Instant
 import kotlinx.serialization.ExperimentalSerializationApi
+import mu.KotlinLogging
 import org.junit.jupiter.api.Test
 import org.mockserver.model.HttpRequest.request
 import org.mockserver.model.HttpResponse.response
 import org.mockserver.model.MediaType
 import java.util.Currency
+
+val log = KotlinLogging.logger {}
 
 @ExperimentalSerializationApi
 class MonobankPublicApiTest : TestMockServerBase(false) {

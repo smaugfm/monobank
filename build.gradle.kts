@@ -10,6 +10,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
     id("org.jetbrains.dokka") version "1.8.10"
     signing
+    `java-library`
     `maven-publish`
 }
 
@@ -21,19 +22,23 @@ repositories {
     mavenCentral()
 }
 
+val javaVersion = "11"
+
 val reactorCore = "3.5.2"
 val reactorNetty = "1.1.2"
 val mockserver = "5.15.0"
 val logback = "1.4.5"
-val javaVersion = "11"
+val resilience4j = "1.7.0"
 
 dependencies {
+    api("io.projectreactor:reactor-core:$reactorCore")
+    api("io.projectreactor.netty:reactor-netty-http:$reactorNetty")
+    api("io.projectreactor.netty:reactor-netty-core:$reactorNetty")
+    api("io.github.resilience4j:resilience4j-reactor:$resilience4j")
+    api("io.github.resilience4j:resilience4j-ratelimiter:$resilience4j")
+    api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-    implementation("io.projectreactor:reactor-core:$reactorCore")
-    implementation("io.projectreactor.netty:reactor-netty-http:$reactorNetty")
-    implementation("io.projectreactor.netty:reactor-netty-core:$reactorNetty")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     testImplementation("org.mock-server:mockserver-netty:$mockserver")
     testImplementation("org.mock-server:mockserver-client-java:$mockserver")
     testImplementation("io.projectreactor:reactor-test:$reactorCore")

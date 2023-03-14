@@ -47,7 +47,7 @@ open class TestMockServerBase(private val expectXToken: Boolean = true) {
 
     companion object {
         const val TOKEN = "validToken"
-        const val PORT = 1080
+        const val PORT = 9999
 
         @JvmStatic
         protected val BASE_URL = "http://127.0.0.1:$PORT"

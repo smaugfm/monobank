@@ -1,5 +1,6 @@
 package io.github.smaugfm.monobank
 
+import io.github.resilience4j.ratelimiter.RateLimiterConfig
 import io.github.smaugfm.monobank.model.MonoCurrencyInfo
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.JsonBuilder
@@ -19,17 +20,25 @@ class MonobankPublicApi internal constructor(
     baseUrl: String,
     port: Int,
     jsonBuilderAction: JsonBuilder.() -> Unit = {},
+    rateLimiterConfig: RateLimiterConfig = defaultRateLimiterConfig(),
     reactorNettyConnectionProvider: ConnectionProvider? = null
-) : MonobankApiBase(baseUrl, port, jsonBuilderAction, reactorNettyConnectionProvider) {
-
+) : MonobankApiBase(
+    baseUrl,
+    port,
+    jsonBuilderAction,
+    rateLimiterConfig,
+    reactorNettyConnectionProvider
+) {
     constructor(
         jsonBuilderAction: JsonBuilder.() -> Unit = {},
+        rateLimiterConfig: RateLimiterConfig = defaultRateLimiterConfig(),
         reactorNettyConnectionProvider: ConnectionProvider? = null
     ) : this(
         BASE_URL,
         PORT,
-        jsonBuilderAction = jsonBuilderAction,
-        reactorNettyConnectionProvider = reactorNettyConnectionProvider
+        jsonBuilderAction,
+        rateLimiterConfig,
+        reactorNettyConnectionProvider
     )
 
     /**

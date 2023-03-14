@@ -1,5 +1,6 @@
 package io.github.smaugfm.monobank
 
+import io.github.resilience4j.ratelimiter.RateLimiterConfig
 import io.github.smaugfm.monobank.model.MonoClientInformation
 import io.github.smaugfm.monobank.model.MonoStatementItem
 import io.github.smaugfm.monobank.model.MonoWebhookRequest
@@ -24,16 +25,25 @@ class MonobankPersonalApi internal constructor(
     baseUrl: String,
     port: Int,
     jsonBuilderAction: JsonBuilder.() -> Unit = {},
+    rateLimiterConfig: RateLimiterConfig = defaultRateLimiterConfig(),
     reactorNettyConnectionProvider: ConnectionProvider? = null
-) : MonobankApiBase(baseUrl, port, jsonBuilderAction, reactorNettyConnectionProvider) {
+) : MonobankApiBase(
+    baseUrl,
+    port,
+    jsonBuilderAction,
+    rateLimiterConfig,
+    reactorNettyConnectionProvider
+) {
     constructor(
         token: String,
         jsonBuilderAction: JsonBuilder.() -> Unit = {},
+        rateLimiterConfig: RateLimiterConfig = defaultRateLimiterConfig(),
         reactorNettyConnectionProvider: ConnectionProvider? = null
     ) : this(
         token,
         BASE_URL,
         PORT,
+        rateLimiterConfig = rateLimiterConfig,
         jsonBuilderAction = jsonBuilderAction,
         reactorNettyConnectionProvider = reactorNettyConnectionProvider
     )
