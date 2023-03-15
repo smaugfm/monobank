@@ -13,7 +13,7 @@ import java.util.Currency
 data class MonoStatementItem(
     val id: String,
     val time: Instant,
-    val description: String,
+    val description: String? = null,
     val mcc: Int,
     val originalMcc: Int,
     val hold: Boolean,
@@ -23,10 +23,10 @@ data class MonoStatementItem(
     val commissionRate: Long,
     val cashbackAmount: Long,
     val balance: Long,
-    val comment: String = "",
-    val receiptId: String,
-    val invoiceId: String,
-    val counterEdrpou: String,
-    val counterIban: String,
-    val counterName: String
+    val comment: String? = null,
+    val receiptId: String? = null,
+    val invoiceId: String? = null,
+    val counterEdrpou: String? = null,
+    val counterIban: String? = null,
+    val counterName: String? = null
 )

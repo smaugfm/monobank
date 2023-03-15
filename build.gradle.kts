@@ -22,7 +22,7 @@ repositories {
     mavenCentral()
 }
 
-val javaVersion = "11"
+val jdkVersion = "11"
 
 val reactorCore = "3.5.2"
 val reactorNetty = "1.1.2"
@@ -71,10 +71,10 @@ tasks {
         useJUnitPlatform()
     }
     withType<DetektCreateBaselineTask> {
-        jvmTarget = javaVersion
+        jvmTarget = jdkVersion
     }
     withType<Detekt> {
-        jvmTarget = javaVersion
+        jvmTarget = jdkVersion
         reports {
             html.required.set(true)
             md.required.set(true)
@@ -93,7 +93,7 @@ tasks {
     }
 }
 kotlin {
-    jvmToolchain(javaVersion.toInt())
+    jvmToolchain(jdkVersion.toInt())
 }
 
 publishing {

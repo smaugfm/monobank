@@ -12,7 +12,7 @@ data class MonoJar(
     val id: String,
     val sendId: String,
     val title: String,
-    val description: String,
+    val description: String? = null,
     val currencyCode: Currency,
     val balance: Long,
     val goal: Long

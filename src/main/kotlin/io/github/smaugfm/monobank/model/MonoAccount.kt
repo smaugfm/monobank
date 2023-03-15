@@ -15,7 +15,7 @@ data class MonoAccount(
     val creditLimit: Long,
     val type: String,
     val currencyCode: Currency,
-    val cashbackType: MonoCashbackType,
+    val cashbackType: MonoCashbackType? = MonoCashbackType.None,
     val iban: String,
-    val maskedPan: List<String>
+    val maskedPan: List<String> = listOf()
 )
