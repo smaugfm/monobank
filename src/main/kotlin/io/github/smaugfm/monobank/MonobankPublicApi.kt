@@ -41,13 +41,17 @@ class MonobankPublicApi internal constructor(
         reactorNettyConnectionProvider
     )
 
+    init {
+        initRateLimiters(this::getExchangeRates)
+    }
+
     /**
      * Отримати базовий перелік курсів валют monobank.
      * Інформація кешується та оновлюється не частіше 1 разу на 5 хвилин.
      */
     fun getExchangeRates(): Mono<List<MonoCurrencyInfo>> =
-        requestExecutor.executeGet(
+        requestExecutor.executeGet<List<MonoCurrencyInfo>>(
             buildUri("/bank/currency"),
             json.serializersModule.serializer()
-        )
+        ).withRateLimiter(this::getExchangeRates)
 }

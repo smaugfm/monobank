@@ -1,7 +1,5 @@
 package io.github.smaugfm.monobank.core
 
-import io.github.resilience4j.ratelimiter.RateLimiter
-import io.github.resilience4j.reactor.ratelimiter.operator.RateLimiterOperator
 import io.github.smaugfm.monobank.exception.MonoApiResponseError
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
@@ -21,7 +19,6 @@ import java.net.URI
 class RequestExecutor(
     private val port: Int,
     private val json: Json,
-    private val rateLimiter: RateLimiter,
     private val httpClient: HttpClient
 ) {
     fun <TResponse : Any> executeGet(
@@ -37,7 +34,6 @@ class RequestExecutor(
             .responseSingle { resp, byteBufMono ->
                 processResponse(resp, byteBufMono, responseSerializer)
             }
-            .transformDeferred(RateLimiterOperator.of(rateLimiter))
 
     fun <TBody, TResponse : Any> executePost(
         uri: URI,

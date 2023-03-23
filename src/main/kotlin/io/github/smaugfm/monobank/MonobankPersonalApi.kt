@@ -34,6 +34,7 @@ class MonobankPersonalApi internal constructor(
     rateLimiterConfig,
     reactorNettyConnectionProvider
 ) {
+
     constructor(
         token: String,
         jsonBuilderAction: JsonBuilder.() -> Unit = {},
@@ -48,16 +49,24 @@ class MonobankPersonalApi internal constructor(
         reactorNettyConnectionProvider = reactorNettyConnectionProvider
     )
 
+    init {
+        initRateLimiters(
+            this::getClientStatements,
+            this::getClientInformation,
+            this::setClientWebhook
+        )
+    }
+
     /**
      * Отримання інформації про клієнта та переліку його рахунків і банок.
      * Обмеження на використання функції не частіше ніж 1 раз у 60 секунд.
      */
     fun getClientInformation(): Mono<MonoClientInformation> =
-        requestExecutor.executeGet(
+        requestExecutor.executeGet<MonoClientInformation>(
             buildUri("/personal/client-info"),
             json.serializersModule.serializer(),
             token
-        )
+        ).withRateLimiter(this::getClientInformation)
 
     /**
      * Встановлення [url] користувача на який будуть надходити нові транзакції [MonoStatementItem]:
@@ -70,13 +79,13 @@ class MonobankPersonalApi internal constructor(
      *    функція буде вимкнута. Відповідь сервера має строго містити HTTP статус-код 200.
      */
     fun setClientWebhook(url: String): Mono<Void> =
-        requestExecutor.executePost(
+        requestExecutor.executePost<MonoWebhookRequest, Void>(
             buildUri("/personal/webhook"),
             MonoWebhookRequest(url),
             json.serializersModule.serializer(),
             null,
             token
-        )
+        ).withRateLimiter(this::setClientWebhook)
 
     /**
      * Отримання виписки за час від [from] до [to].
@@ -92,10 +101,10 @@ class MonobankPersonalApi internal constructor(
         if (to != null) {
             path += "/${to.epochSeconds}"
         }
-        return requestExecutor.executeGet(
+        return requestExecutor.executeGet<List<MonoStatementItem>>(
             buildUri(path),
             json.serializersModule.serializer(),
             token
-        )
+        ).withRateLimiter(this::getClientStatements)
     }
 }
