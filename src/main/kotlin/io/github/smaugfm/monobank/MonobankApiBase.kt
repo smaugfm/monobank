@@ -16,7 +16,7 @@ import kotlin.reflect.KCallable
 
 @ExperimentalSerializationApi
 sealed class MonobankApiBase(
-    private val baseUrl: String = "https://api.monobank.ua",
+    private val baseUrl: String = BASE_URL,
     port: Int,
     jsonBuilderAction: JsonBuilder.() -> Unit,
     private val rateLimiterConfig: RateLimiterConfig,
