@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "io.github.smaugfm"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
 val isReleaseVersion = !version.toString().endsWith("SNAPSHOT")
 
 repositories {
