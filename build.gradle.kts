@@ -9,6 +9,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "11.2.0"
     id("io.gitlab.arturbosch.detekt") version "1.22.0"
     id("org.jetbrains.dokka") version "1.8.10"
+    id("com.github.breadmoirai.github-release") version "2.4.1"
     signing
     `java-library`
     `maven-publish`
@@ -94,6 +95,17 @@ tasks {
 }
 kotlin {
     jvmToolchain(jdkVersion.toInt())
+}
+
+githubRelease {
+    val githubReleaseToken: String? by project
+    token(githubReleaseToken)
+    repo(project.name)
+    releaseAssets(
+        tasks.jar.get().destinationDirectory.asFile.get().listFiles()
+    )
+    targetCommitish("master")
+    overwrite(true)
 }
 
 publishing {
