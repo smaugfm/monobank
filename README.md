@@ -13,6 +13,6 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.smaugfm:monobank:0.0.1")
+    implementation("io.github.smaugfm:monobank:0.0.2")
 }
 ```
